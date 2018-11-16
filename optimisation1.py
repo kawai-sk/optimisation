@@ -202,8 +202,7 @@ def semi_newton(f,a_0,e,X):#準Newton法
     print("初期点",(a_0[0],a_0[1]),"許容誤差",e)
     n = len(X)
     g = grad(f,X)
-    B = [sub_v(grad(g[i],X),a_0,X) for i in range(n)]
-    H = inversed(B)
+    H = I(n)
     x_n = [[a_0[i]] for i in range(n)]
     x_p = [[0] for i in range(n)]
     y_n= sub_t(g,x_n,X)
@@ -219,10 +218,7 @@ def semi_newton(f,a_0,e,X):#準Newton法
         H = mat_sum(H,mat_sch(mat_times(s,t(s)),m))
         x_p,y_p = x_n,y_n
         d = mat_times(H,y_n)
-        def l(x):
-            return sub_s(f,[x_n[i][0]-x*d[i][0] for i in range(n)],X)
-        a = optimize.brent(l)
-        x_n = mat_sub(x_n,mat_sch(d,a))
+        x_n = mat_sub(x_n,d)
         for i in range(n):
             xs[i].append(x_n[i][0])
         y_n = sub_t(g,x_n,X)
